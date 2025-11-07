@@ -2,15 +2,13 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from './components/AdminLayout';
 import LoginPage from './pages/LoginPage';
 import SettingsPage from './pages/SettingsPage';
+import DashboardPage from './pages/DashboardPage';
+import { useAuth } from './context/AuthContext';
 
-// Simple authentication check for demonstration
-const isAuthenticated = () => {
-  // In a real app, you'd check for a token in localStorage or a cookie
-  return true; // For now, always return true to access protected routes
-};
 
 const ProtectedRoute = ({ children }) => {
-  if (!isAuthenticated()) {
+  const { token } = useAuth();
+  if (!token) {
     return <Navigate to="/login" replace />;
   }
   return children;
@@ -29,8 +27,7 @@ export function App() {
           </ProtectedRoute>
         }
       >
-        {/* Add dashboard route later */}
-        <Route index element={<div>Dashboard Page</div>} />
+        <Route index element={<DashboardPage />} />
         <Route path="settings" element={<SettingsPage />} />
       </Route>
     </Routes>

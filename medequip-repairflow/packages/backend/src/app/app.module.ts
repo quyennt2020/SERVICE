@@ -6,6 +6,9 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { SettingsModule } from './settings/settings.module';
+import { TicketsModule } from './tickets/tickets.module';
+import { CustomersModule } from './customers/customers.module';
+import { EquipmentModule } from './equipment/equipment.module';
 
 @Module({
   imports: [
@@ -30,6 +33,9 @@ import { SettingsModule } from './settings/settings.module';
     AuthModule,
     UsersModule,
     SettingsModule,
+    TicketsModule,
+    CustomersModule,
+    EquipmentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
