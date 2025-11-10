@@ -22,4 +22,22 @@ export class EquipmentService {
       take: 10,
     });
   }
+
+  findAll(filterDto: any): Promise<Equipment[]> {
+    const findOptions: any = { relations: ['customer', 'model'] };
+    if (filterDto) {
+        // Add filtering logic here later
+    }
+    return this.equipmentRepository.find(findOptions);
+  }
+
+  create(createEquipmentDto: any): Promise<Equipment> {
+    const newEquipment = this.equipmentRepository.create(createEquipmentDto);
+    return this.equipmentRepository.save(newEquipment) as unknown as Promise<Equipment>;
+  }
+
+  async update(id: number, updateEquipmentDto: any): Promise<Equipment> {
+    await this.equipmentRepository.update(id, updateEquipmentDto);
+    return this.equipmentRepository.findOne({ where: { id }, relations: ['customer', 'model'] });
+  }
 }

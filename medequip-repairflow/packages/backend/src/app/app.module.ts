@@ -9,7 +9,6 @@ import { SettingsModule } from './settings/settings.module';
 import { TicketsModule } from './tickets/tickets.module';
 import { CustomersModule } from './customers/customers.module';
 import { EquipmentModule } from './equipment/equipment.module';
-import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -37,7 +36,6 @@ import { DashboardModule } from './dashboard/dashboard.module';
     TicketsModule,
     CustomersModule,
     EquipmentModule,
-    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

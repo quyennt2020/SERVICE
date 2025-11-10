@@ -2,7 +2,7 @@
 
 Dưới đây là đánh giá trạng thái của các module trong dự án dựa trên việc so sánh mã nguồn hiện tại với tài liệu PRD.
 
-- **Dashboard**: In Progress
+- **Dashboard**: Completed
 - **Inventory**: Not Started
 - **Schedule**: Not Started
 - **Reports**: Not Started

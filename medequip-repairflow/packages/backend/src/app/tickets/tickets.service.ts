@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Ticket } from '../entities/ticket.entity';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
@@ -19,20 +19,8 @@ export class TicketsService {
     return this.ticketsRepository.save(newTicket);
   }
 
-  findAll(filterDto?: any): Promise<Ticket[]> {
-    const findOptions: any = { relations: ['customer', 'equipment', 'assigned_to'] };
-    const where: any = {};
-
-    if (filterDto) {
-      if (filterDto.status) where.status = In(filterDto.status);
-      if (filterDto.priority) where.priority = In(filterDto.priority);
-      if (filterDto.technicianId) where.assigned_to_id = In(filterDto.technicianId);
-      if (filterDto.customerId) where.customer_id = In(filterDto.customerId);
-      if (filterDto.notStatus) where.status = Not(In(filterDto.notStatus));
-    }
-
-    findOptions.where = where;
-    return this.ticketsRepository.find(findOptions);
+  findAll(): Promise<Ticket[]> {
+    return this.ticketsRepository.find({ relations: ['customer', 'equipment', 'assigned_to'] });
   }
 
   findOne(id: number): Promise<Ticket> {
@@ -46,10 +34,5 @@ export class TicketsService {
 
   async remove(id: number): Promise<void> {
     await this.ticketsRepository.delete(id);
-  }
-
-  countByStatus(status: string | string[]): Promise<number> {
-    const whereCondition = Array.isArray(status) ? { status: In(status) } : { status };
-    return this.ticketsRepository.count({ where: whereCondition });
   }
 }
