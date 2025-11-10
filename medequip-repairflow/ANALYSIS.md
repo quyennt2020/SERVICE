@@ -10,7 +10,7 @@ Dưới đây là đánh giá trạng thái của các module trong dự án d�
 - **Tech App (Mobile App)**: Not Started
 - **Customer Portal**: Not Started
 - **Billing**: Not Started
-- **Customers**: In Progress
+- **Customers**: Completed
 - **Knowledge Base**: Not Started
 - **Notifications**: Not Started
 - **Settings (bao gồm Users & Auth)**: In Progress

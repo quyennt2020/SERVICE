@@ -3,7 +3,6 @@ import AdminLayout from './components/AdminLayout';
 import LoginPage from './pages/LoginPage';
 import SettingsPage from './pages/SettingsPage';
 import DashboardPage from './pages/DashboardPage';
-import EquipmentPage from './pages/EquipmentPage';
 import { useAuth } from './context/AuthContext';
 
 
@@ -29,7 +28,6 @@ export function App() {
         }
       >
         <Route index element={<DashboardPage />} />
-        <Route path="equipment" element={<EquipmentPage />} />
         <Route path="settings" element={<SettingsPage />} />
       </Route>
     </Routes>

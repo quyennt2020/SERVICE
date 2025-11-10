@@ -9,6 +9,7 @@ import { SettingsModule } from './settings/settings.module';
 import { TicketsModule } from './tickets/tickets.module';
 import { CustomersModule } from './customers/customers.module';
 import { EquipmentModule } from './equipment/equipment.module';
+import { CustomerContactsModule } from './customer-contacts/customer-contacts.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { EquipmentModule } from './equipment/equipment.module';
     TicketsModule,
     CustomersModule,
     EquipmentModule,
+    CustomerContactsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

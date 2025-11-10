@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import EquipmentTable from '../components/equipment/EquipmentTable';
 import EquipmentFormModal from '../components/equipment/EquipmentFormModal';
-import { api } from '../api';
+import { apiClient as api } from '../api';
 
 export default function EquipmentPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);

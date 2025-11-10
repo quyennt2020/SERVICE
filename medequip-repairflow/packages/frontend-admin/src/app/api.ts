@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiClient = axios.create({
+export const apiClient = axios.create({
   baseURL: '/api', // This will be proxied by Vite to the backend
 });
 

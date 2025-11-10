@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { api } from '../../api';
+import { apiClient as api } from '../../api';
 
 export default function EquipmentTable({ onEdit }) {
   const [equipment, setEquipment] = useState([]);

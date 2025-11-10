@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Select from 'react-select/async';
-import { api } from '../../api';
+import { apiClient as api } from '../../api';
 
 export default function EquipmentFormModal({ isOpen, onClose, equipment, onSave }) {
   const [formData, setFormData] = useState(equipment || {});
