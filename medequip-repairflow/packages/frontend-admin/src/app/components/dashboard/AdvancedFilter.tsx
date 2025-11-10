@@ -1,11 +1,47 @@
+import { useState, useEffect } from 'react';
 import { useDashboardStore } from '../../stores/dashboard.store';
+import { api } from '../../api';
+
+const priorities = ['LOW', 'MEDIUM', 'HIGH'];
+const statuses = ['NEW', 'DIAGNOSING', 'AWAITING_APPROVAL', 'PARTS_ORDERED', 'REPAIRING', 'TESTING', 'READY_FOR_INVOICING'];
 
 export default function AdvancedFilter() {
-  const { filters, setFilters } = useDashboardStore();
+  const { setFilters } = useDashboardStore();
+  const [technicians, setTechnicians] = useState([]);
+  const [customers, setCustomers] = useState([]);
 
-  const handleStatusChange = (e) => {
-    // In a real app, this would handle multi-select
-    setFilters({ status: [e.target.value] });
+  const [selectedTechs, setSelectedTechs] = useState<string[]>([]);
+  const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const techResponse = await api.get('/users?role=TECHNICIAN');
+        setTechnicians(techResponse.data);
+        const custResponse = await api.get('/customers');
+        setCustomers(custResponse.data);
+      } catch (error) {
+        console.error('Failed to fetch filter data', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    setFilters({
+        technicianId: selectedTechs,
+        customerId: selectedCustomers,
+        status: selectedStatuses,
+        priority: selectedPriorities,
+    })
+  }, [selectedTechs, selectedCustomers, selectedStatuses, selectedPriorities, setFilters]);
+
+  const handleMultiSelectChange = (setter) => (e) => {
+    const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+    setter(selectedOptions);
   };
 
   return (
@@ -14,14 +50,28 @@ export default function AdvancedFilter() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div>
           <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>
-          <select id="status" onChange={handleStatusChange} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-            <option value="">All</option>
-            <option value="AWAITING_APPROVAL">Awaiting Approval</option>
-            <option value="REPAIRING">Repairing</option>
-            <option value="PARTS_ORDERED">Parts Ordered</option>
+          <select id="status" multiple onChange={handleMultiSelectChange(setSelectedStatuses)} className="mt-1 block w-full border-gray-300 rounded-md">
+            {statuses.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
-        {/* Add other filters for priority, technician, customer here */}
+        <div>
+          <label htmlFor="priority" className="block text-sm font-medium text-gray-700">Priority</label>
+          <select id="priority" multiple onChange={handleMultiSelectChange(setSelectedPriorities)} className="mt-1 block w-full border-gray-300 rounded-md">
+            {priorities.map(p => <option key={p} value={p}>{p}</option>)}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="technician" className="block text-sm font-medium text-gray-700">Technician</label>
+          <select id="technician" multiple onChange={handleMultiSelectChange(setSelectedTechs)} className="mt-1 block w-full border-gray-300 rounded-md">
+            {technicians.map(tech => <option key={tech.id} value={tech.id}>{tech.full_name}</option>)}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="customer" className="block text-sm font-medium text-gray-700">Customer</label>
+          <select id="customer" multiple onChange={handleMultiSelectChange(setSelectedCustomers)} className="mt-1 block w-full border-gray-300 rounded-md">
+            {customers.map(cust => <option key={cust.id} value={cust.id}>{cust.name}</option>)}
+          </select>
+        </div>
       </div>
     </div>
   );

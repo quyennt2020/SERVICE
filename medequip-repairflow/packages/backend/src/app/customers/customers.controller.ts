@@ -11,4 +11,9 @@ export class CustomersController {
   search(@Query('q') query: string) {
     return this.customersService.search(query);
   }
+
+  @Get()
+  findAll() {
+    return this.customersService.findAll();
+  }
 }

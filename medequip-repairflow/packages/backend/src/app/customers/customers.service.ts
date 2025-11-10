@@ -16,4 +16,8 @@ export class CustomersService {
       take: 10,
     });
   }
+
+  findAll(): Promise<Customer[]> {
+    return this.customersRepository.find();
+  }
 }

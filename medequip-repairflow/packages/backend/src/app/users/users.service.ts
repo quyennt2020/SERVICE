@@ -10,8 +10,12 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+  findAll(role?: string): Promise<User[]> {
+    const findOptions: any = {};
+    if (role) {
+      findOptions.where = { role };
+    }
+    return this.usersRepository.find(findOptions);
   }
 
   findOneByEmail(email: string): Promise<User | undefined> {
