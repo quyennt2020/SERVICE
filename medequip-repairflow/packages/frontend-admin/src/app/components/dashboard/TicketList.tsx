@@ -4,7 +4,7 @@ import { useDashboardStore } from '../../stores/dashboard.store';
 import { api } from '../../api';
 
 export default function TicketList() {
-  const { filters } = useDashboardStore();
+  const { filters, trigger } = useDashboardStore();
   const [tickets, setTickets] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -14,7 +14,7 @@ export default function TicketList() {
       try {
         const params = new URLSearchParams();
         Object.entries(filters).forEach(([key, value]) => {
-          if (Array.isArray(value)) {
+          if (Array.isArray(value) && value.length > 0) {
             value.forEach(v => params.append(key, v));
           }
         });
@@ -29,7 +29,7 @@ export default function TicketList() {
     };
 
     fetchTickets();
-  }, [filters]);
+  }, [filters, trigger]);
 
   if (isLoading) {
     return <div>Loading tickets...</div>;

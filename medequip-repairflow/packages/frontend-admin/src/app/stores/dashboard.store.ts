@@ -10,6 +10,8 @@ interface DashboardFilters {
 interface DashboardState {
   filters: DashboardFilters;
   setFilters: (newFilters: Partial<DashboardFilters>) => void;
+  refetchTickets: () => void; // A simple way to trigger a refetch
+  trigger: number;
 }
 
 export const useDashboardStore = create<DashboardState>((set) => ({
@@ -19,6 +21,8 @@ export const useDashboardStore = create<DashboardState>((set) => ({
     technicianId: [],
     customerId: [],
   },
+  trigger: 0,
   setFilters: (newFilters) =>
     set((state) => ({ filters: { ...state.filters, ...newFilters } })),
+  refetchTickets: () => set((state) => ({ trigger: state.trigger + 1 })),
 }));
