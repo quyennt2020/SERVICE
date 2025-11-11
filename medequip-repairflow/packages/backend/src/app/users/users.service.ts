@@ -10,10 +10,10 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  findAll(role?: string): Promise<User[]> {
+  findAll(filters: { role?: string }): Promise<User[]> {
     const findOptions: any = {};
-    if (role) {
-      findOptions.where = { role };
+    if (filters.role) {
+      findOptions.where = { role: filters.role };
     }
     return this.usersRepository.find(findOptions);
   }
@@ -22,5 +22,8 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { email } });
   }
 
-  // We will add more methods like create, update, etc. later
+  async update(id: number, updateDto: Partial<User>): Promise<User> {
+    await this.usersRepository.update(id, updateDto);
+    return this.usersRepository.findOne({ where: { id } });
+  }
 }

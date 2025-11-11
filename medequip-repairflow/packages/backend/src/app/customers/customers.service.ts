@@ -16,22 +16,4 @@ export class CustomersService {
       take: 10,
     });
   }
-
-  findAll(): Promise<Customer[]> {
-    return this.customersRepository.find();
-  }
-
-  findOne(id: number): Promise<Customer> {
-    return this.customersRepository.findOne({ where: { id } });
-  }
-
-  create(createCustomerDto: any): Promise<Customer> {
-    const newCustomer = this.customersRepository.create(createCustomerDto);
-    return this.customersRepository.save(newCustomer) as unknown as Promise<Customer>;
-  }
-
-  async update(id: number, updateCustomerDto: any): Promise<Customer> {
-    await this.customersRepository.update(id, updateCustomerDto);
-    return this.findOne(id);
-  }
 }

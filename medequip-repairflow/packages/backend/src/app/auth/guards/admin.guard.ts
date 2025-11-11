@@ -1,11 +1,18 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import { Observable } from 'rxjs';
 
 @Injectable()
-export class AdminGuard extends AuthGuard('jwt') implements CanActivate {
-  canActivate(context: ExecutionContext): boolean {
+export class AdminGuard implements CanActivate {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    return user && user.role === 'ADMIN';
+
+    if (user && user.role === 'ADMIN') {
+      return true;
+    }
+
+    throw new ForbiddenException('You do not have permission to access this resource.');
   }
 }

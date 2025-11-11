@@ -1,4 +1,12 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { SettingsController } from './settings.controller';
+import { SettingsService } from './settings.service';
+import { SystemSettings } from '../entities/system-settings.entity';
 
-@Module({})
+@Module({
+  imports: [TypeOrmModule.forFeature([SystemSettings])],
+  controllers: [SettingsController],
+  providers: [SettingsService],
+})
 export class SettingsModule {}
