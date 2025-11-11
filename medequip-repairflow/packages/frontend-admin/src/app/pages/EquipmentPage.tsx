@@ -1,12 +1,17 @@
 import { useState } from 'react';
 import EquipmentTable from '../components/equipment/EquipmentTable';
 import EquipmentFormModal from '../components/equipment/EquipmentFormModal';
+import EquipmentFilterBar from '../components/equipment/EquipmentFilterBar';
 import { apiClient as api } from '../api';
 
 export default function EquipmentPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEquipment, setSelectedEquipment] = useState(null);
-  const [refreshKey, setRefreshKey] = useState(0); // To trigger table refresh
+  const [filters, setFilters] = useState({});
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  };
 
   const handleOpenModal = (equipment = null) => {
     setSelectedEquipment(equipment);
@@ -25,7 +30,8 @@ export default function EquipmentPage() {
       } else {
         await api.post('/equipment', equipmentData);
       }
-      setRefreshKey(oldKey => oldKey + 1); // Trigger refresh
+      // Trigger a refetch by updating filters state slightly, forces re-render of table
+      setFilters(currentFilters => ({...currentFilters}));
       handleCloseModal();
     } catch (error) {
       console.error('Failed to save equipment', error);
@@ -40,7 +46,8 @@ export default function EquipmentPage() {
           Add Equipment
         </button>
       </div>
-      <EquipmentTable key={refreshKey} onEdit={handleOpenModal} />
+      <EquipmentFilterBar onFilterChange={handleFilterChange} />
+      <EquipmentTable filters={filters} onEdit={handleOpenModal} />
       <EquipmentFormModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}

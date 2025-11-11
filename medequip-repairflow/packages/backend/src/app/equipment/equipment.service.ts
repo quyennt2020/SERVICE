@@ -23,11 +23,30 @@ export class EquipmentService {
     });
   }
 
-  findAll(filterDto: any): Promise<Equipment[]> {
-    const findOptions: any = { relations: ['customer', 'model'] };
-    if (filterDto) {
-        // Add filtering logic here later
+  findAll(filterDto: { customerId?: number, manufacturer?: string, searchQuery?: string }): Promise<Equipment[]> {
+    const { customerId, manufacturer, searchQuery } = filterDto;
+    const findOptions: any = {
+      relations: ['customer', 'model'],
+      where: [],
+    };
+
+    const baseConditions: any = {};
+    if (customerId) {
+      baseConditions.customer_id = customerId;
     }
+    if (manufacturer) {
+      baseConditions.model = { manufacturer: ILike(`%${manufacturer}%`) };
+    }
+
+    if (searchQuery) {
+      findOptions.where = [
+        { ...baseConditions, serial_number: ILike(`%${searchQuery}%`) },
+        { ...baseConditions, model: { ...baseConditions.model, name: ILike(`%${searchQuery}%`) } },
+      ];
+    } else {
+      findOptions.where = baseConditions;
+    }
+
     return this.equipmentRepository.find(findOptions);
   }
 

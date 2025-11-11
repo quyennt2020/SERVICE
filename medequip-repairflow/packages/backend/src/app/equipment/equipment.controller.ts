@@ -14,8 +14,23 @@ export class EquipmentController {
   }
 
   @Get()
-  findAll(@Query() filterDto: any) {
-    return this.equipmentService.findAll(filterDto);
+  findAll(
+    @Query('customerId') customerId?: string,
+    @Query('manufacturer') manufacturer?: string,
+    @Query('searchQuery') searchQuery?: string
+  ) {
+    const filters = {
+      customerId: customerId ? +customerId : undefined,
+      manufacturer,
+      searchQuery,
+    };
+    return this.equipmentService.findAll(filters);
+  }
+
+  @Patch(':id/deactivate')
+  @UseGuards(AdminGuard)
+  deactivate(@Param('id') id: string) {
+    return this.equipmentService.update(+id, { status: 'INACTIVE' });
   }
 
   @Post()

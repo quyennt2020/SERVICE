@@ -14,6 +14,6 @@ Dưới đây là đánh giá trạng thái của các module trong dự án d�
 - **Knowledge Base**: Not Started
 - **Notifications**: Not Started
 - **Settings (bao gồm Users & Auth)**: In Progress
-- **Equipment (CRUD)**: In Progress
+- **Equipment (CRUD)**: Completed
 - **Data Import**: Not Started
 - **Core Workflow (Tickets)**: In Progress

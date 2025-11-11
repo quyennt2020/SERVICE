@@ -41,9 +41,20 @@ export default function EquipmentFormModal({ isOpen, onClose, equipment, onSave 
           </div>
           <div>
             <label>Customer</label>
-            <Select cacheOptions defaultOptions loadOptions={loadCustomers} value={formData.customer} onChange={handleCustomerChange} />
+            <Select cacheOptions defaultOptions loadOptions={loadCustomers} value={formData.customer} onChange={handleCustomerChange} required />
           </div>
-          {/* Add other fields like model, location etc. here */}
+          <div>
+            <label>Model ID</label>
+            <input name="model_id" type="number" value={formData.model_id || ''} onChange={handleInputChange} className="w-full border border-gray-300 rounded-md p-2" required />
+          </div>
+          <div>
+            <label>Location</label>
+            <input name="location" value={formData.location || ''} onChange={handleInputChange} className="w-full border border-gray-300 rounded-md p-2" />
+          </div>
+          <div>
+            <label>Installation Date</label>
+            <input name="install_date" type="date" value={formData.install_date ? formData.install_date.split('T')[0] : ''} onChange={handleInputChange} className="w-full border border-gray-300 rounded-md p-2" />
+          </div>
           <div className="flex justify-end space-x-2">
             <button type="button" onClick={onClose} className="bg-gray-300 px-4 py-2 rounded">Cancel</button>
             <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
