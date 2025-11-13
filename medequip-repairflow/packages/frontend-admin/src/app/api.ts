@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const apiClient = axios.create({
+const apiClient = axios.create({
   baseURL: '/api', // This will be proxied by Vite to the backend
 });
 
@@ -14,5 +14,10 @@ apiClient.interceptors.request.use((config) => {
 
 export const fetchTickets = async () => {
   const { data } = await apiClient.get('/tickets');
+  return data;
+};
+
+export const updateTicketStatus = async ({ id, status }) => {
+  const { data } = await apiClient.patch(`/tickets/${id}/status`, { status });
   return data;
 };

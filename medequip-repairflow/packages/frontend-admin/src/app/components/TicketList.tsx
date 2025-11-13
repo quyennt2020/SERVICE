@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTickets } from '../api';
+import TicketDetailModal from './TicketDetailModal';
 
 export default function TicketList() {
+  const [selectedTicket, setSelectedTicket] = useState(null);
   const { data: tickets, error, isLoading } = useQuery({
     queryKey: ['tickets'],
     queryFn: fetchTickets,
@@ -25,7 +28,7 @@ export default function TicketList() {
         </thead>
         <tbody>
           {tickets?.map((ticket) => (
-            <tr key={ticket.id}>
+            <tr key={ticket.id} onClick={() => setSelectedTicket(ticket)}>
               <td>{ticket.ticket_ref}</td>
               <td>{ticket.customer?.name}</td>
               <td>{ticket.equipment?.serial_number}</td>
@@ -35,6 +38,12 @@ export default function TicketList() {
           ))}
         </tbody>
       </table>
+      {selectedTicket && (
+        <TicketDetailModal
+          ticket={selectedTicket}
+          onClose={() => setSelectedTicket(null)}
+        />
+      )}
     </div>
   );
 }

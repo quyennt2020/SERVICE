@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Ticket } from '../entities/ticket.entity';
@@ -34,5 +34,23 @@ export class TicketsService {
 
   async remove(id: number): Promise<void> {
     await this.ticketsRepository.delete(id);
+  }
+
+  async updateStatus(id: number, status: string): Promise<Ticket> {
+    const ticket = await this.findOne(id);
+    const allowedTransitions = {
+      Open: ['In Progress'],
+      'In Progress': ['On Hold', 'Resolved'],
+      'On Hold': ['In Progress'],
+      Resolved: ['Closed'],
+      Closed: [],
+    };
+
+    if (!allowedTransitions[ticket.status]?.includes(status)) {
+      throw new BadRequestException(`Invalid status transition from "${ticket.status}" to "${status}"`);
+    }
+
+    ticket.status = status;
+    return this.ticketsRepository.save(ticket);
   }
 }

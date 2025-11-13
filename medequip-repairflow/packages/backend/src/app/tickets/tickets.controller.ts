@@ -3,6 +3,7 @@ import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AdminGuard } from '../auth/guards/admin.guard';
 
 @Controller('tickets')
 @UseGuards(JwtAuthGuard)
@@ -32,5 +33,11 @@ export class TicketsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.ticketsService.remove(+id);
+  }
+
+  @Patch(':id/status')
+  @UseGuards(AdminGuard)
+  updateStatus(@Param('id') id: string, @Body('status') status: string) {
+    return this.ticketsService.updateStatus(+id, status);
   }
 }
