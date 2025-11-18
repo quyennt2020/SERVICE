@@ -21,3 +21,8 @@ export const updateTicketStatus = async ({ id, status }) => {
   const { data } = await apiClient.patch(`/tickets/${id}/status`, { status });
   return data;
 };
+
+export const createTicket = async (ticketData) => {
+  const { data } = await apiClient.post('/tickets', ticketData);
+  return data;
+};
