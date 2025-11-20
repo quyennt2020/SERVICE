@@ -7,22 +7,22 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
 
   useEffect(() => {
-    // If we have a token, we could fetch user profile here
-    // For now, we'll just assume the token is valid if it exists
-    if (token) {
-      // In a real app, decode token to get user info
-      setUser({ email: 'admin@example.com', role: 'ADMIN' });
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
     }
-  }, [token]);
+  }, []);
 
   const login = (newToken, userData) => {
     localStorage.setItem('token', newToken);
+    localStorage.setItem('user', JSON.stringify(userData));
     setToken(newToken);
     setUser(userData);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setToken(null);
     setUser(null);
   };
