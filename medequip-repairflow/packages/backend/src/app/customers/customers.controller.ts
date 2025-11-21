@@ -48,6 +48,11 @@ export class CustomersController {
     return this.customersService.getCustomerTickets(+id);
   }
 
+  @Get(':id/contacts')
+  getCustomerContacts(@Param('id') id: string) {
+    return this.customersService.getCustomerContacts(+id);
+  }
+
   @Get(':id/stats')
   getCustomerStats(@Param('id') id: string) {
     return this.customersService.getCustomerStats(+id);

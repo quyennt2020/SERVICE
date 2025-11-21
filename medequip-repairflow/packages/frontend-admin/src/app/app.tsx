@@ -7,6 +7,8 @@ import TicketListPage from './pages/TicketListPage';
 import { TicketDetailPage } from './pages/TicketDetailPage';
 import { CustomerListPage } from './pages/CustomerListPage';
 import { EquipmentListPage } from './pages/EquipmentListPage';
+import { InvoicesPage } from './pages/InvoicesPage';
+import { PartsPage } from './pages/PartsPage';
 import { useAuth } from './context/AuthContext';
 
 
@@ -37,6 +39,8 @@ export function App() {
         <Route path="settings" element={<SettingsPage />} />
         <Route path="tickets" element={<TicketListPage />} />
         <Route path="tickets/:id" element={<TicketDetailPage />} />
+        <Route path="invoices" element={<InvoicesPage />} />
+        <Route path="parts" element={<PartsPage />} />
       </Route>
     </Routes>
   );

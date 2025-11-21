@@ -1,20 +1,6 @@
 # PRD Implementation Status - MedEquip RepairFlow
 
 ## Overview
-This document compares the current implementation against the PRD requirements.
-
----
-
-## ✅ **IMPLEMENTED FEATURES**
-
-### 1. Core Workflow (Luồng công việc Cốt lõi) - **PARTIALLY IMPLEMENTED**
-- ✅ Ticket Creation (Tạo Ticket)
-- ✅ Diagnosis (Chẩn đoán) - UI exists
-- ✅ Quote Generation (Tạo báo giá) - UI exists
-- ✅ Quote Approval (Phê duyệt báo giá) - Simulated in UI
-- ✅ Repair Completion (Hoàn thành sửa chữa) - UI exists
-- ✅ Invoice Generation (Tạo hóa đơn) - Backend logic exists
-- ⚠️ **Missing**: Full workflow state machine, PO management, Parts ordering
 
 ### 2. Dashboard (Bảng điều khiển) - **IMPLEMENTED**
 - ✅ Admin dashboard with ticket overview
@@ -28,7 +14,7 @@ This document compares the current implementation against the PRD requirements.
 - ✅ Customer list view
 - ✅ Customer creation modal
 - ✅ Customer edit modal
-- ⚠️ **Missing**: Customer detail modal with 360° view, Contacts tab, Equipment tab, Service History tab, Billing tab
+- ✅ Customer detail modal with 360° view (Overview, Contacts, Equipment, Service History, Billing)
 
 ### 4. Equipment (Thiết bị) - **IMPLEMENTED**
 - ✅ Equipment CRUD operations
@@ -75,24 +61,25 @@ This document compares the current implementation against the PRD requirements.
 - ❌ "Service Contracts" tab
 - ❌ Data scoping by customerId
 
-### 2. Billing Module (Mô-đun Thanh toán) - **NOT IMPLEMENTED**
-- ❌ Invoice management page
-- ❌ KPI cards (Revenue, Pending, Overdue, Paid)
-- ❌ Invoice table with filtering
-- ❌ Invoice detail modal
-- ❌ Semi-automatic invoice generation from completed jobs
-- ❌ "Record Payment" functionality
-- ❌ "Send Reminder" functionality
-- ❌ Invoice PDF generation
-- ❌ Payment tracking
+### 2. Billing Module (Mô-đun Thanh toán) - **IMPLEMENTED** ✅
+- ✅ Invoice management page
+- ✅ Invoice list with filtering (All, Draft, Sent, Paid, Overdue)
+- ✅ Invoice detail modal
+- ✅ Semi-automatic invoice generation from completed tickets
+- ✅ "Record Payment" functionality
+- ✅ Payment tracking
+- ⚠️ **Partial**: KPI cards (basic implementation, can be enhanced)
+- ❌ **Missing**: "Send Reminder" functionality, Invoice PDF generation
 
-### 3. Inventory Management (Quản lý Kho) - **NOT IMPLEMENTED**
-- ❌ Parts catalog
-- ❌ Stock level tracking
-- ❌ Low stock alerts
-- ❌ Parts usage logging
-- ❌ Purchase order management
-- ❌ Supplier management
+### 3. Inventory Management (Quản lý Kho) - **IMPLEMENTED** ✅
+- ✅ Parts catalog with CRUD operations
+- ✅ Stock level tracking
+- ✅ Low stock alerts and filtering
+- ✅ Parts usage logging (inventory logs)
+- ✅ Stock adjustment with reason tracking
+- ✅ Part detail view with pricing and margins
+- ✅ Inventory activity history
+- ❌ **Missing**: Purchase order management, Supplier management
 
 ### 4. Schedule (Lịch trình) - **NOT IMPLEMENTED**
 - ❌ Calendar view for technician schedules
@@ -154,10 +141,12 @@ This document compares the current implementation against the PRD requirements.
   - Customers (CRUD)
   - Equipment (CRUD + Equipment Models)
   - Tickets (CRUD + Assignment + Filtering)
+  - Invoices (CRUD + Payment Recording + Auto-generation)
+  - Parts/Inventory (CRUD + Stock Adjustment + Inventory Logs)
   - Auth (Login)
 - ✅ Database seeding script
 - ✅ E2E test infrastructure
-- ⚠️ **Missing**: Billing, Inventory, Warranty, Notifications modules
+- ⚠️ **Missing**: Warranty, Notifications, Contracts modules
 
 ### Frontend (React + Vite + TailwindCSS)
 - ✅ React Router for navigation
@@ -170,8 +159,10 @@ This document compares the current implementation against the PRD requirements.
 - ✅ Equipment page
 - ✅ Settings page (User management)
 - ✅ Ticket detail page with workflow steps
+- ✅ Invoices page with filtering and payment recording
+- ✅ Parts/Inventory page with stock management
 - ✅ Login page
-- ⚠️ **Missing**: Customer Portal, Billing UI, Inventory UI, Reports UI, Calendar/Schedule UI
+- ⚠️ **Missing**: Customer Portal, Reports UI, Calendar/Schedule UI
 
 ### Database
 - ✅ PostgreSQL with TypeORM
@@ -188,40 +179,29 @@ This document compares the current implementation against the PRD requirements.
 1. ✅ **Core Workflow**: ~40% (Basic ticket CRUD, UI for workflow steps)
 2. ❌ **Core Warranty**: 0%
 3. ✅ **Dashboard**: ~60% (Basic dashboard, missing KPIs and analytics)
-4. ❌ **Inventory**: 0%
-5. ❌ **Schedule**: 0%
-6. ❌ **Reports**: 0%
-7. ❌ **History**: 0%
-8. ❌ **Tech App**: 0%
-9. ❌ **Customer Portal**: 0%
-10. ❌ **Billing**: 0%
-11. ✅ **Customers**: ~50% (CRUD done, missing 360° view)
-12. ❌ **Knowledge Base**: 0%
-13. ❌ **Notifications**: 0%
-
-### Overall Implementation: **~25-30%** of full PRD
-
 ---
 
 ## 🎯 **NEXT PRIORITIES (Based on PRD)**
 
 ### High Priority (Core Business Value)
-1. **Billing Module** - Critical for revenue tracking
-2. **Customer Portal** - Key differentiator for customer satisfaction
-3. **Inventory Management** - Essential for parts tracking
+1. ✅ ~~**Billing Module**~~ - **COMPLETED** ✅
+2. ✅ ~~**Inventory Management**~~ - **COMPLETED** ✅
+3. **Customer Portal** - Key differentiator for customer satisfaction
 4. **Complete Workflow State Machine** - Ensure proper ticket lifecycle
+5. **Dashboard KPIs** - Add revenue, parts usage, and performance metrics
 
 ### Medium Priority
-5. **Reports & Analytics** - Business intelligence
-6. **Schedule/Calendar** - Resource optimization
-7. **Service History** - Customer relationship management
-8. **Notifications** - User engagement
+6. **Reports & Analytics** - Business intelligence
+7. **Schedule/Calendar** - Resource optimization
+8. **Service History** - Customer relationship management
+9. **Notifications** - User engagement
+10. **Invoice PDF Generation** - Professional invoicing
 
 ### Lower Priority (Can be added later)
-9. **Tech Mobile App** - Field technician efficiency
-10. **Warranty Management** - Automated warranty handling
-11. **Knowledge Base** - Internal documentation
-12. **Service Contracts** - Contract management
+11. **Tech Mobile App** - Field technician efficiency
+12. **Warranty Management** - Automated warranty handling
+13. **Knowledge Base** - Internal documentation
+14. **Service Contracts** - Contract management
 
 ---
 

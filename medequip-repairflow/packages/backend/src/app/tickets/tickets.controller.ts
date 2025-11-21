@@ -75,8 +75,23 @@ export class TicketsController {
     @Param('id') id: string,
     @Body('partId') partId: number,
     @Body('quantity') quantity: number,
+    @Body('userId') userId?: number,
   ) {
-    return this.ticketsService.logPartUsage(+id, partId, quantity);
+    return this.ticketsService.logPartUsage(+id, partId, quantity, userId);
+  }
+
+  @Get(':id/parts')
+  getPartsUsed(@Param('id') id: string) {
+    return this.ticketsService.getPartsUsed(+id);
+  }
+
+  @Delete(':id/parts/:partUsedId')
+  removePartUsage(
+    @Param('id') id: string,
+    @Param('partUsedId') partUsedId: string,
+    @Body('userId') userId?: number,
+  ) {
+    return this.ticketsService.removePartUsage(+id, +partUsedId, userId);
   }
 
   @Post(':id/complete')

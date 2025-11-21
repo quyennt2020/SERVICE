@@ -11,6 +11,8 @@ export default function AdminLayout() {
     { path: '/tickets', label: 'Tickets', icon: '🎫' },
     { path: '/customers', label: 'Customers', icon: '👥' },
     { path: '/equipment', label: 'Equipment', icon: '🔧' },
+    { path: '/parts', label: 'Parts', icon: '📦' },
+    { path: '/invoices', label: 'Invoices', icon: '💰' },
     { path: '/settings', label: 'Settings', icon: '⚙️' },
   ];
 

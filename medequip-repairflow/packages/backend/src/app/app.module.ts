@@ -9,6 +9,8 @@ import { SettingsModule } from './settings/settings.module';
 import { TicketsModule } from './tickets/tickets.module';
 import { CustomersModule } from './customers/customers.module';
 import { EquipmentModule } from './equipment/equipment.module';
+import { InvoicesModule } from './invoices/invoices.module';
+import { PartsModule } from './parts/parts.module';
 import { User } from './entities/user.entity';
 import { Customer } from './entities/customer.entity';
 import { Equipment } from './entities/equipment.entity';
@@ -77,6 +79,8 @@ import { SystemSetting } from './entities/system-setting.entity';
     TicketsModule,
     CustomersModule,
     EquipmentModule,
+    InvoicesModule,
+    PartsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

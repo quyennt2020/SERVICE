@@ -4,6 +4,7 @@ import { Repository, ILike } from 'typeorm';
 import { Customer } from '../entities/customer.entity';
 import { Equipment } from '../entities/equipment.entity';
 import { Ticket } from '../entities/ticket.entity';
+import { CustomerContact } from '../entities/customer-contact.entity';
 
 @Injectable()
 export class CustomersService {
@@ -14,6 +15,8 @@ export class CustomersService {
     private equipmentRepository: Repository<Equipment>,
     @InjectRepository(Ticket)
     private ticketsRepository: Repository<Ticket>,
+    @InjectRepository(CustomerContact)
+    private contactsRepository: Repository<CustomerContact>,
   ) { }
 
   findAll(): Promise<Customer[]> {
@@ -65,6 +68,13 @@ export class CustomersService {
     });
   }
 
+  async getCustomerContacts(customerId: number): Promise<CustomerContact[]> {
+    return this.contactsRepository.find({
+      where: { customer_id: customerId },
+      order: { full_name: 'ASC' },
+    });
+  }
+
   async getCustomerStats(customerId: number) {
     const [totalTickets, activeTickets, totalEquipment] = await Promise.all([
       this.ticketsRepository.count({ where: { customer_id: customerId } }),
@@ -87,4 +97,3 @@ export class CustomersService {
     };
   }
 }
-

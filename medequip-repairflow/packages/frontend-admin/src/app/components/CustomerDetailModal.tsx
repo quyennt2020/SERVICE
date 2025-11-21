@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchCustomerEquipment, fetchCustomerTickets, fetchCustomerStats } from '../api';
+import { fetchCustomerEquipment, fetchCustomerTickets, fetchCustomerStats, fetchCustomerContacts, fetchCustomerInvoices } from '../api';
 
 interface CustomerDetailModalProps {
     isOpen: boolean;
@@ -15,6 +15,8 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
     const [activeTab, setActiveTab] = useState('overview');
     const [equipment, setEquipment] = useState<any[]>([]);
     const [tickets, setTickets] = useState<any[]>([]);
+    const [contacts, setContacts] = useState<any[]>([]);
+    const [invoices, setInvoices] = useState<any[]>([]);
     const [stats, setStats] = useState<any>(null);
     const [loading, setLoading] = useState(false);
 
@@ -29,15 +31,19 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
 
         setLoading(true);
         try {
-            const [equipmentData, ticketsData, statsData] = await Promise.all([
+            const [equipmentData, ticketsData, contactsData, statsData, invoicesData] = await Promise.all([
                 fetchCustomerEquipment(customer.id),
                 fetchCustomerTickets(customer.id),
+                fetchCustomerContacts(customer.id),
                 fetchCustomerStats(customer.id),
+                fetchCustomerInvoices(customer.id),
             ]);
 
             setEquipment(equipmentData);
             setTickets(ticketsData);
+            setContacts(contactsData);
             setStats(statsData);
+            setInvoices(invoicesData);
         } catch (error) {
             console.error('Failed to load customer data', error);
         } finally {
@@ -49,6 +55,7 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
 
     const tabs = [
         { id: 'overview', label: 'Overview', icon: '📊' },
+        { id: 'contacts', label: 'Contacts', icon: '👥' },
         { id: 'equipment', label: 'Equipment', icon: '🔧' },
         { id: 'history', label: 'Service History', icon: '📋' },
         { id: 'billing', label: 'Billing', icon: '💰' },
@@ -76,14 +83,14 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
 
                 {/* Tabs */}
                 <div className="border-b border-gray-200 bg-gray-50">
-                    <div className="flex space-x-1 px-6">
+                    <div className="flex space-x-1 px-6 overflow-x-auto">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`px-6 py-3 font-medium text-sm transition-colors ${activeTab === tab.id
-                                        ? 'border-b-2 border-blue-600 text-blue-600 bg-white'
-                                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                className={`px-6 py-3 font-medium text-sm transition-colors whitespace-nowrap ${activeTab === tab.id
+                                    ? 'border-b-2 border-blue-600 text-blue-600 bg-white'
+                                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                                     }`}
                             >
                                 <span className="mr-2">{tab.icon}</span>
@@ -149,6 +156,50 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
                                 </div>
                             )}
 
+                            {/* Contacts Tab */}
+                            {activeTab === 'contacts' && (
+                                <div>
+                                    <div className="flex justify-between items-center mb-4">
+                                        <h3 className="text-xl font-semibold text-gray-800">Contacts ({contacts.length})</h3>
+                                        {/* Future: Add Contact Button */}
+                                    </div>
+
+                                    {contacts.length === 0 ? (
+                                        <p className="text-gray-500 text-center py-8">No contacts found for this customer.</p>
+                                    ) : (
+                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                            {contacts.map((contact) => (
+                                                <div key={contact.id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                                    <div className="flex items-center mb-3">
+                                                        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold mr-3">
+                                                            {contact.full_name.charAt(0)}
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="font-semibold text-gray-900">{contact.full_name}</h4>
+                                                            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                                                                {contact.role || 'Contact'}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="space-y-2 text-sm">
+                                                        <div className="flex items-center text-gray-600">
+                                                            <span className="mr-2">📧</span>
+                                                            <a href={`mailto:${contact.email}`} className="hover:text-blue-600">{contact.email}</a>
+                                                        </div>
+                                                        {contact.phone && (
+                                                            <div className="flex items-center text-gray-600">
+                                                                <span className="mr-2">📱</span>
+                                                                <a href={`tel:${contact.phone}`} className="hover:text-blue-600">{contact.phone}</a>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
                             {/* Equipment Tab */}
                             {activeTab === 'equipment' && (
                                 <div>
@@ -193,8 +244,8 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
                                                             <div className="flex items-center gap-3 mb-2">
                                                                 <h4 className="font-semibold text-gray-900">#{ticket.ticket_ref}</h4>
                                                                 <span className={`px-2 py-1 rounded text-xs font-medium ${ticket.status === 'Resolved' ? 'bg-green-100 text-green-800' :
-                                                                        ticket.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
-                                                                            'bg-yellow-100 text-yellow-800'
+                                                                    ticket.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
+                                                                        'bg-yellow-100 text-yellow-800'
                                                                     }`}>
                                                                     {ticket.status}
                                                                 </span>
@@ -217,11 +268,52 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
                             {/* Billing Tab */}
                             {activeTab === 'billing' && (
                                 <div>
-                                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Billing & Invoices</h3>
-                                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
-                                        <p className="text-yellow-800 font-medium">Billing module coming soon</p>
-                                        <p className="text-yellow-600 text-sm mt-2">Invoice management and payment tracking will be available in the next release.</p>
-                                    </div>
+                                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Billing & Invoices ({invoices.length})</h3>
+                                    {invoices.length === 0 ? (
+                                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+                                            <p className="text-gray-600 font-medium">No invoices found for this customer.</p>
+                                        </div>
+                                    ) : (
+                                        <div className="overflow-x-auto">
+                                            <table className="min-w-full divide-y divide-gray-200">
+                                                <thead className="bg-gray-50">
+                                                    <tr>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice #</th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ticket</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="bg-white divide-y divide-gray-200">
+                                                    {invoices.map((invoice) => (
+                                                        <tr key={invoice.id} className="hover:bg-gray-50">
+                                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
+                                                                {invoice.invoice_ref}
+                                                            </td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                {new Date(invoice.issue_date).toLocaleDateString()}
+                                                            </td>
+                                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                                <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${invoice.status === 'Paid' ? 'bg-green-100 text-green-800' :
+                                                                    invoice.status === 'Overdue' ? 'bg-red-100 text-red-800' :
+                                                                        'bg-yellow-100 text-yellow-800'
+                                                                    }`}>
+                                                                    {invoice.status}
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                                ${Number(invoice.total).toFixed(2)}
+                                                            </td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                                {invoice.ticket ? `#${invoice.ticket.ticket_ref}` : '-'}
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </>

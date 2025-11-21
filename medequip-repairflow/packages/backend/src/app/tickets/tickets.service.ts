@@ -8,6 +8,7 @@ import { Part } from '../entities/part.entity';
 import { Invoice } from '../entities/invoice.entity';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { PartsService } from '../parts/parts.service';
 
 @Injectable()
 export class TicketsService {
@@ -22,6 +23,7 @@ export class TicketsService {
     private partsRepository: Repository<Part>,
     @InjectRepository(Invoice)
     private invoicesRepository: Repository<Invoice>,
+    private partsService: PartsService, // Inject PartsService
   ) { }
 
   async create(createTicketDto: CreateTicketDto): Promise<Ticket> {
@@ -112,19 +114,64 @@ export class TicketsService {
     return quote;
   }
 
-  async logPartUsage(ticketId: number, partId: number, quantity: number): Promise<PartUsed> {
+  async logPartUsage(ticketId: number, partId: number, quantity: number, userId?: number): Promise<PartUsed> {
     const part = await this.partsRepository.findOne({ where: { id: partId } });
     if (!part) throw new NotFoundException(`Part #${partId} not found`);
 
+    // Check stock availability
+    if (part.stock < quantity) {
+      throw new BadRequestException(
+        `Insufficient stock for ${part.description}. Available: ${part.stock}, Requested: ${quantity}`
+      );
+    }
+
+    // Auto-deduct stock using PartsService (creates inventory log)
+    await this.partsService.adjustStock(
+      partId,
+      -quantity, // Negative to deduct
+      'Used in Repair',
+      userId
+    );
+
+    // Create parts used record
     const partUsed = this.partsUsedRepository.create({
       ticket_id: ticketId,
       part_id: partId,
       quantity: quantity,
-      cost_at_time: part.cost, // Assuming Part entity has cost
-      price_at_time: part.price, // Assuming Part entity has price
+      cost_at_time: part.cost,
+      price_at_time: part.price,
     });
 
     return this.partsUsedRepository.save(partUsed);
+  }
+
+  async getPartsUsed(ticketId: number): Promise<PartUsed[]> {
+    return this.partsUsedRepository.find({
+      where: { ticket_id: ticketId },
+      relations: ['part'],
+    });
+  }
+
+  async removePartUsage(ticketId: number, partUsedId: number, userId?: number): Promise<void> {
+    const partUsed = await this.partsUsedRepository.findOne({
+      where: { id: partUsedId, ticket_id: ticketId },
+      relations: ['part'],
+    });
+
+    if (!partUsed) {
+      throw new NotFoundException(`Part usage #${partUsedId} not found for ticket #${ticketId}`);
+    }
+
+    // Restore stock by adding back the quantity
+    await this.partsService.adjustStock(
+      partUsed.part_id,
+      partUsed.quantity, // Positive to add back
+      'Removed from Ticket',
+      userId
+    );
+
+    // Delete the part usage record
+    await this.partsUsedRepository.remove(partUsed);
   }
 
   async completeRepair(ticketId: number): Promise<Ticket> {
