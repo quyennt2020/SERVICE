@@ -15,9 +15,8 @@ export default function LoginPage() {
     setError(null);
     try {
       const response = await axios.post('/api/auth/login', { email, password });
-      const { access_token } = response.data;
-      // In a real app, decode token to get user data
-      login(access_token, { email });
+      const { access_token, user } = response.data;
+      login(access_token, user);
       navigate('/');
     } catch (err) {
       setError('Invalid email or password');

@@ -1,0 +1,80 @@
+﻿
+Setting up...
+
+node.exe : FAIL backend-e2e packages/backend-e2e/src/backend/workflow.spec.ts
+At C:\Program Files\nodejs\npx.ps1:29 char:3
++   & $NODE_EXE $NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FAIL backend-e2...orkflow.spec.ts: 
+   String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Repair Workflow E2E
+    ΓêÜ should login as admin (138 ms)
+    ├ù should create a new technician (110 ms)
+    ΓêÜ should create a customer (49 ms)
+    ΓêÜ should create an equipment model (20 ms)
+    ΓêÜ should create equipment for the customer (25 ms)
+    ΓêÜ should create a ticket (17 ms)
+    ├ù should assign the ticket to the technician (59 ms)
+    ├ù should verify the ticket is assigned (23 ms)
+
+  ΓùÅ Repair Workflow E2E ΓÇ║ should create a new technician
+
+    AxiosError: Request failed with status code 500
+
+      at settle (../../node_modules/axios/lib/core/settle.js:19:12)
+      at IncomingMessage.handleStreamEnd 
+(../../node_modules/axios/lib/adapters/http.js:793:11)
+      at Axios.request (../../node_modules/axios/lib/core/Axios.js:45:41)
+
+  ΓùÅ Repair Workflow E2E ΓÇ║ should assign the ticket to the technician
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: undefined
+    Received: null
+
+    [0m [90m 108 |[39m         }[33m,[39m authHeaders())[33m;[39m
+     [90m 109 |[39m         
+expect(res[33m.[39mstatus)[33m.[39mtoBe([35m200[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 110 |[39m         expect(res[33m.[39mdata[33m.
+[39massigned_tech_id)[33m.[39mtoBe(techId)[33m;[39m
+     [90m     |[39m                                           
+[31m[1m^[22m[39m
+     [90m 111 |[39m     })[33m;[39m
+     [90m 112 |[39m
+     [90m 113 |[39m     it([32m'should verify the ticket is 
+assigned'[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at src/backend/workflow.spec.ts:110:43
+      at fulfilled (../../node_modules/tslib/tslib.js:167:62)
+
+  ΓùÅ Repair Workflow E2E ΓÇ║ should verify the ticket is assigned
+
+    TypeError: Cannot read properties of null (reading 'id')
+
+    [0m [90m 114 |[39m         [36mconst[39m res [33m=[39m 
+[36mawait[39m 
+axios[33m.[39m[36mget[39m([32m`/api/tickets/${ticketId}`[39m[33m,[39m 
+authHeaders())[33m;[39m
+     [90m 115 |[39m         
+expect(res[33m.[39mstatus)[33m.[39mtoBe([35m200[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 116 |[39m         expect(res[33m.[39mdata[33m.
+[39massigned_tech[33m.[39mid)[33m.[39mtoBe(techId)[33m;[39m
+     [90m     |[39m                                       [31m[1m^[22m[39m
+     [90m 117 |[39m     })[33m;[39m
+     [90m 118 |[39m })[33m;[39m
+     [90m 119 |[39m[0m
+
+      at src/backend/workflow.spec.ts:116:39
+      at fulfilled (../../node_modules/tslib/tslib.js:167:62)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 5 passed, 8 total
+Snapshots:   0 total
+Time:        0.927 s, estimated 1 s
+Ran all test suites matching packages/backend-e2e/src/backend/workflow.spec.ts.
+
+Tearing down...
+

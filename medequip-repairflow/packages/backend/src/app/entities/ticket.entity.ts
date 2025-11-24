@@ -4,6 +4,8 @@ import { Equipment } from './equipment.entity';
 import { User } from './user.entity';
 import { CustomerContact } from './customer-contact.entity';
 import { Invoice } from './invoice.entity';
+import { Quote } from './quote.entity';
+import { OneToMany } from 'typeorm';
 
 @Entity({ name: 'tickets' })
 export class Ticket {
@@ -20,7 +22,7 @@ export class Ticket {
   equipment_id: number;
 
   @Column({ nullable: true })
-  assigned_to_id: number;
+  assigned_tech_id: number;
 
   @Column({ nullable: true })
   created_by_id: number;
@@ -61,8 +63,8 @@ export class Ticket {
   equipment: Equipment;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'assigned_to_id' })
-  assigned_to: User;
+  @JoinColumn({ name: 'assigned_tech_id' })
+  assigned_tech: User;
 
   @ManyToOne(() => CustomerContact)
   @JoinColumn({ name: 'created_by_id' })
@@ -70,4 +72,7 @@ export class Ticket {
 
   @OneToOne(() => Invoice, (invoice) => invoice.ticket)
   invoice: Invoice;
+
+  @OneToMany(() => Quote, (quote) => quote.ticket)
+  quotes: Quote[];
 }

@@ -3,6 +3,12 @@ import AdminLayout from './components/AdminLayout';
 import LoginPage from './pages/LoginPage';
 import SettingsPage from './pages/SettingsPage';
 import DashboardPage from './pages/DashboardPage';
+import TicketListPage from './pages/TicketListPage';
+import { TicketDetailPage } from './pages/TicketDetailPage';
+import { CustomerListPage } from './pages/CustomerListPage';
+import { EquipmentListPage } from './pages/EquipmentListPage';
+import { InvoicesPage } from './pages/InvoicesPage';
+import { PartsPage } from './pages/PartsPage';
 import { useAuth } from './context/AuthContext';
 
 
@@ -28,7 +34,13 @@ export function App() {
         }
       >
         <Route index element={<DashboardPage />} />
+        <Route path="customers" element={<CustomerListPage />} />
+        <Route path="equipment" element={<EquipmentListPage />} />
         <Route path="settings" element={<SettingsPage />} />
+        <Route path="tickets" element={<TicketListPage />} />
+        <Route path="tickets/:id" element={<TicketDetailPage />} />
+        <Route path="invoices" element={<InvoicesPage />} />
+        <Route path="parts" element={<PartsPage />} />
       </Route>
     </Routes>
   );
